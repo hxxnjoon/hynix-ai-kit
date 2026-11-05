@@ -1,0 +1,5 @@
+interface:
+  display_name: "hk-verify"
+  short_description: "테스트 연결, 증거, 독립 리뷰"
+policy:
+  allow_implicit_invocation: false

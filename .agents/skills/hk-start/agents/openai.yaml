@@ -1,0 +1,5 @@
+interface:
+  display_name: "hk-start"
+  short_description: "과제 분석, 담당자 질문, 계약"
+policy:
+  allow_implicit_invocation: false

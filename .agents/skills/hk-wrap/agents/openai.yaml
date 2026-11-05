@@ -1,0 +1,5 @@
+interface:
+  display_name: "hk-wrap"
+  short_description: "동결, 정리, 서술형 대비"
+policy:
+  allow_implicit_invocation: false

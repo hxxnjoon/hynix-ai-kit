@@ -1,0 +1,5 @@
+interface:
+  display_name: "hk-data"
+  short_description: "데이터 계약, 집계 함정, 누수 점검"
+policy:
+  allow_implicit_invocation: false
