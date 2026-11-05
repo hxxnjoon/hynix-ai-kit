@@ -194,7 +194,7 @@ class TestInstall(unittest.TestCase):
         r2 = self.sh()   # 재설치해도 블록이 하나
         self.assertEqual(r2.returncode, 0, r2.stderr)
         self.assertEqual(open(os.path.join(self.d, "AGENTS.md")).read().count("hynix-ai-kit:begin"), 1)
-        for s in ("hk-start", "hk-data", "hk-verify", "hk-handoff", "hk-wrap"):
+        for s in ("hk-start", "hk-data", "hk-design", "hk-build", "hk-verify", "hk-handoff", "hk-wrap"):
             self.assertTrue(os.path.exists(os.path.join(self.d, ".agents", "skills", s, "SKILL.md")))
         self.assertTrue(os.path.exists(os.path.join(self.d, "TASK.md")))
         self.assertTrue(os.path.exists(os.path.join(self.d, ".hk", "AGENTS.md.orig")))
@@ -230,7 +230,7 @@ class TestDocs(unittest.TestCase):
     def test_skill_frontmatter(self):
         base = os.path.join(ROOT, ".agents", "skills")
         names = sorted(os.listdir(base))
-        self.assertEqual(names, ["hk-data", "hk-handoff", "hk-start", "hk-verify", "hk-wrap"])
+        self.assertEqual(names, ["hk-build", "hk-data", "hk-design", "hk-handoff", "hk-start", "hk-verify", "hk-wrap"])
         for n in names:
             text = open(os.path.join(base, n, "SKILL.md"), encoding="utf-8").read()
             self.assertTrue(text.startswith(f"---\nname: {n}\ndescription: "), n)
@@ -250,3 +250,34 @@ class TestDocs(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPractice(unittest.TestCase):
+    """모의 과제 생성기와 채점기가 끝까지 실행되고, 기준선이 함정에 걸리는지 확인한다."""
+
+    def run_py(self, script, *args, cwd):
+        return subprocess.run([sys.executable, os.path.join(ROOT, "practice", script), *args],
+                              cwd=cwd, capture_output=True, text=True)
+
+    def test_p3_baseline_violates_hidden_pm(self):
+        d = tempfile.mkdtemp()
+        try:
+            self.assertEqual(self.run_py("p3-metrology-dispatch/make_data.py", cwd=d).returncode, 0)
+            self.assertEqual(self.run_py("p3-metrology-dispatch/grade.py", "--baseline", "b.csv", cwd=d).returncode, 0)
+            r = self.run_py("p3-metrology-dispatch/grade.py", "b.csv", cwd=d)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("정비 시간 배정", r.stdout)
+        finally:
+            shutil.rmtree(d)
+
+    def test_p1_p2_generate_and_reject_bad_submission(self):
+        for task, bad in (("p1-etch-screening", "lot_id,wafer_id,score,screen\nX,01,1,1\n"),
+                          ("p2-alarm-triage", "rank,equipment_id,alarm_code,first_time,last_time,count,reason\n1,ETCH-01,E-101,2026-10-19 00:00,2026-10-19 00:00,1,\n")):
+            d = tempfile.mkdtemp()
+            try:
+                self.assertEqual(self.run_py(f"{task}/make_data.py", cwd=d).returncode, 0)
+                with open(os.path.join(d, "s.csv"), "w") as f:
+                    f.write(bad)
+                self.assertEqual(self.run_py(f"{task}/grade.py", "s.csv", cwd=d).returncode, 1, task)
+            finally:
+                shutil.rmtree(d)

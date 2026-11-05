@@ -26,6 +26,8 @@ AGENTS.md                 Codex 작업 규칙 (설치 시 과제 AGENTS.md 끝�
   hk-start/               README 분석, 담당자 인터뷰 질문, 과제 계약
   hk-data/                데이터 계약, 반도체 집계 함정, 모델 누수 점검
     references/semiconductor.md   용어, 데이터 종류, 지표, SPC
+  hk-design/              핵심 로직 유형 분류, 선택지 비교, 검증기 먼저
+  hk-build/               서비스형 결과물: 최소 스택, 0.0.0.0, 로직 분리, UAT
   hk-verify/              완료 조건 ↔ 테스트, 실패 먼저, 독립 리뷰, preflight
   hk-handoff/             세션 인수인계
   hk-wrap/                동결, 결과 README, 서술형 대비 FINAL_REVIEW
@@ -34,6 +36,7 @@ tools/                    표준 라이브러리만 사용 (pandas 없어도 동
   metrics.py              분류, 회귀 지표와 가중 수율 교차 계산 (sklearn과 일치 검증)
   preflight.py            환경 점검(--env)과 제출 전 점검. 검사 0건이면 exit 2
 templates/                TASK, DECISIONS, HANDOFF, FINAL_REVIEW
+practice/                 모의 과제 3종(예측, 서비스, 배정)과 리허설 가이드. 설치되지 않음
 install.sh                과제 폴더 설치, 사용자 범위 설치, 설치 확인
 tests/                    이 키트 자체 테스트
 ```
@@ -66,7 +69,7 @@ bash /tmp/hk/install.sh --user && bash /tmp/hk/install.sh --check --user
 내가 "hk-이름"이라고 하면 /tmp/hk/.agents/skills/hk-이름/SKILL.md를 읽고 그대로 해줘. 먼저 hk-start.
 ```
 
-설치 후에는 **같은 과제 폴더에서 Codex 새 세션**을 열고 `/skills`로 hk-* 5개가 보이는지 확인한다.
+설치 후에는 **같은 과제 폴더에서 Codex 새 세션**을 열고 `/skills`로 hk-* 7개가 보이는지 확인한다.
 
 ## 당일 흐름
 
@@ -76,6 +79,8 @@ bash /tmp/hk/install.sh --user && bash /tmp/hk/install.sh --check --user
 | 0분 | 과제 시작, 설치 | `$hk-start 시작 HH:MM, 작업 180분` |
 | ~15% | 담당자에게 질문 (사람이 메신저로) → 합의문 승인 | `이 답변을 TASK.md에 반영하고 바뀌는 구현을 알려줘: ...` |
 | 데이터 확인 | 데이터 계약, 누수 점검 | `$hk-data` |
+| 핵심 로직 | 유형 분류, 선택지 비교 후 선택 | `$hk-design` |
+| 화면이 필요하면 | 얇게 끝까지, UAT | `$hk-build` |
 | ~35% | 첫 완주: 제출 형식 결과물 생성 | `완료 조건 C1부터 $hk-verify 절차로 진행해` |
 | 중간 | 맥락이 길어지면 인수인계 | `$hk-handoff` |
 | ~80% | 동결, 독립 리뷰 | `리뷰` → `$hk-wrap` |
@@ -83,6 +88,11 @@ bash /tmp/hk/install.sh --user && bash /tmp/hk/install.sh --check --user
 | 제출 후 | **AI 사용 금지.** FINAL_REVIEW에서 정리한 카드로 직접 답변 | |
 
 언제든 `STATE`(현재 단계, 남은 시간, 미검증 항목) / `근거`(수치의 파일:줄과 명령)를 보낼 수 있다.
+
+## 연습
+
+본선 과제는 공개되지 않았고 2차와 다를 수 있다. `practice/REHEARSAL.md`를 따라 세 유형을 시간 재고 연습한다.
+각 과제의 담당자는 숨은 조건을 물어봐야만 알려주고, `grade.py`가 숨겨진 정답으로 채점한다.
 
 ## 도구 예시
 

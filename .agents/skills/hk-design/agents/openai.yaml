@@ -1,0 +1,5 @@
+interface:
+  display_name: "hk-design"
+  short_description: "핵심 로직 선택지, 검증기 먼저"
+policy:
+  allow_implicit_invocation: false

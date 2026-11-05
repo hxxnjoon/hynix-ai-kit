@@ -9,7 +9,7 @@
 #
 # 과제 폴더에서 바뀌는 것 (프로젝트 설치):
 #   AGENTS.md          기존 내용 보존, 하네스 블록만 추가 또는 갱신 (원본은 .hk/AGENTS.md.orig)
-#   .agents/skills/    hk-* 스킬 5개
+#   .agents/skills/    hk-* 스킬 7개
 #   .hk/               도구, 템플릿
 #   TASK.md, DECISIONS.md   없을 때만 템플릿 복사
 set -euo pipefail
@@ -19,7 +19,7 @@ TARGET="$PWD"
 MODE="project"
 CHECK=0
 FORCE=0
-SKILLS=(hk-start hk-data hk-verify hk-handoff hk-wrap)
+SKILLS=(hk-start hk-data hk-design hk-build hk-verify hk-handoff hk-wrap)
 BEGIN="<!-- hynix-ai-kit:begin -->"
 
 while [ $# -gt 0 ]; do
@@ -151,7 +151,7 @@ git -C "$TARGET" rev-parse --is-inside-work-tree >/dev/null 2>&1 \
 
 cat <<'EOF'
 
-다음 단계: 같은 과제 폴더에서 Codex 새 세션을 열고 /skills 로 hk-* 5개가 보이는지 확인한 뒤
+다음 단계: 같은 과제 폴더에서 Codex 새 세션을 열고 /skills 로 hk-* 7개가 보이는지 확인한 뒤
   $hk-start
 스킬이 보이지 않으면: "AGENTS.md를 따르고 .agents/skills/hk-start/SKILL.md를 읽고 진행해"
 EOF
